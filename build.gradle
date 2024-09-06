@@ -1,0 +1,39 @@
+plugins {
+    id 'base'
+}
+
+task packageApp(type: Zip) {
+    from('.') {
+        exclude 'node_modules/'
+        exclude 'vendor/'
+        exclude '.env'
+        exclude '.git/'         // Exclude .git folder
+        exclude '/.DS_Store'    // Exclude macOS system files
+        exclude '/.gradle/'   // Exclude Gradle-related files
+        exclude '/Thumbs.db'    // Exclude Windows system files
+        exclude '/~*'           // Exclude temporary files
+    }
+    into('LaravelShoppingcart')
+    archiveFileName = 'LaravelShoppingcart.zip'
+}
+
+build {
+    dependsOn clean, packageApp
+}
+
+task testApp {
+    doLast {
+        println 'Running tests...'
+        exec {
+            commandLine 'vendor/bin/phpunit'
+        }
+    }
+}
+
+task testReport {
+    dependsOn testApp
+    doLast {
+        println 'Generating test report...'
+        // Additional logic for generating reports can be added here
+    }
+}
